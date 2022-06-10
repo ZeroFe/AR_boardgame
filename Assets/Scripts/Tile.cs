@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,7 +8,20 @@ using UnityEngine;
 /// </summary>
 public class Tile : MonoBehaviour
 {
-    public Tile NextTile;
-    // 鸥老 瓤苞
+    public TileEffect tileEffect;
     // 鸥老 加己
+
+    private void Awake()
+    {
+        tileEffect = GetComponent<TileEffect>();
+        if (tileEffect == null)
+        {
+            tileEffect = gameObject.AddComponent<NoneEffect>();
+        }
+    }
+
+    public void ApplyTileEffect(Player player)
+    {
+        tileEffect.ApplyTileEffect(player);
+    }
 }
