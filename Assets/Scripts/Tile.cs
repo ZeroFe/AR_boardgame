@@ -8,20 +8,46 @@ using UnityEngine;
 /// </summary>
 public class Tile : MonoBehaviour
 {
-    public TileEffect tileEffect;
+    public enum TileType
+    {
+        Normal,
+        GoldenCard,
+        Victory
+    }
+
+    public static float TILE_REVEAL_ANIM_TIME = 0.4f;
+
+    public TileType tileType = TileType.Normal;
+    public bool isMoved = false;
+    //public TileEffect tileEffect;
     // 타일 속성
 
     private void Awake()
     {
-        tileEffect = GetComponent<TileEffect>();
-        if (tileEffect == null)
-        {
-            tileEffect = gameObject.AddComponent<NoneEffect>();
-        }
+        //tileEffect = GetComponent<TileEffect>();
+        //if (tileEffect == null)
+        //{
+        //    tileEffect = gameObject.AddComponent<NoneEffect>();
+        //}
     }
 
-    public void ApplyTileEffect(Player player)
+    public void ApplyTileEffect(Player target)
     {
-        tileEffect.ApplyTileEffect(player);
+        //tileEffect.ApplyTileEffect(target);
+        // 팝업을 띄우고, 효과 적용
+        switch (tileType)
+        {
+            case TileType.Normal:
+                GameSystem.Instance.CheckBattle();
+                break;
+            case TileType.GoldenCard:
+                // 골든 카드 매니저에서 랜덤하게 카드를 불러온다
+                var card = GoldenCardManager.Instance.GetCard();
+                PopupSystem.Instance.ApplyPopup(card.effectName, card.effectDescription, card.ApplyEffect, target);
+                break;
+            case TileType.Victory:
+                GameSystem.Instance.Victory(target);
+                break;
+        }
     }
 }
